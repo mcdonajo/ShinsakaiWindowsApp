@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShinsakaiWindowsApp", "ShinsakaiWindowsApp\ShinsakaiWindowsApp.csproj", "{501A6E7B-30ED-4A52-964A-F854FF97F29E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{879B931A-9DCD-41AD-87E0-FA09328BB85D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{501A6E7B-30ED-4A52-964A-F854FF97F29E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{501A6E7B-30ED-4A52-964A-F854FF97F29E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{501A6E7B-30ED-4A52-964A-F854FF97F29E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{501A6E7B-30ED-4A52-964A-F854FF97F29E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0B7B481A-DC5E-4CB0-B0D1-303C8D7A42D6}
+	EndGlobalSection
+EndGlobal
