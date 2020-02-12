@@ -4,3 +4,6 @@
 
 /.vs/ShinsakaiWindowsApp/v15/Server/sqlite3
 /.vs/ShinsakaiWindowsApp/v15/.suo
+/ShinsakaiWindowsApp/bin
+/ShinsakaiWindowsApp/obj/Debug
+/ShinsakaiWindowsApp/obj/Release
