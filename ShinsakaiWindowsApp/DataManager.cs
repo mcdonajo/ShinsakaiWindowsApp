@@ -14,6 +14,8 @@ namespace ShinsakaiWindowsApp
         public static GroupManager GroupManager { get; set; } = new GroupManager();
         public static RegistrantManager RegistrantManager { get; set; } = new RegistrantManager();
 
+        public static Registrant DefaultRegistrant { get; } = new Registrant();
+
         public static void export(String fileName)
         {
             using (StreamWriter sr = new StreamWriter(fileName))
@@ -78,7 +80,7 @@ namespace ShinsakaiWindowsApp
 
         public static string GetGuid()
         {
-            return new Guid().ToString();
+            return Guid.NewGuid().ToString();
         }
     }
 }

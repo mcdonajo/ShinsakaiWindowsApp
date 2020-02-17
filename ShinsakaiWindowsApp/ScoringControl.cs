@@ -13,14 +13,14 @@ namespace ShinsakaiWindowsApp
     public partial class ScoringControl : UserControl
     {
         public int judgeNum = 0;
-        IScore score;
+        Score score;
         private IScoringListener listener;
         Dictionary<int, ScoringEntry> rows = new Dictionary<int, ScoringEntry>();
         Dictionary<int, Judge> columns = new Dictionary<int, Judge>();
         Dictionary<ScoringEntry, int> rowsReversed = new Dictionary<ScoringEntry, int>();
         bool shouldUpdate = true;
 
-        public ScoringControl(ref IScore score, Registrant r, IScoringListener listener)
+        public ScoringControl(ref Score score, Registrant r, IScoringListener listener)
         {
             suspendUpdates();
             InitializeComponent();
@@ -42,7 +42,7 @@ namespace ShinsakaiWindowsApp
 
         private void addJudges()
         {
-            int judgeCount = score.getScores().Count;
+            int judgeCount = score.Scores.Count;
             if (judgeCount == 0)
             {
                 addColumn();
@@ -59,7 +59,7 @@ namespace ShinsakaiWindowsApp
         private void fillData()
         {
             int i = 0;
-            foreach(KeyValuePair<Judge, Dictionary<ScoringEntry, float>> judgeScore in score.getScores())
+            foreach(KeyValuePair<Judge, Dictionary<ScoringEntry, float>> judgeScore in score.Scores)
             {
                 dataGridView1.Columns[i].HeaderCell.Value = judgeScore.Key.Name;
                 foreach (KeyValuePair<ScoringEntry, float> kvp in judgeScore.Value)

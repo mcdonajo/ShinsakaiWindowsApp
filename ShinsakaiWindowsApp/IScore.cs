@@ -5,14 +5,22 @@ namespace ShinsakaiWindowsApp
     public interface IScore
     {
         void addScore(Judge judge, ScoringEntry entryKey, float value);
-        Dictionary<Judge, Dictionary<ScoringEntry, float>> getScores();
         List<ScoringEntry> getRows();
         float getTotal();
     }
 
-    class Score : IScore
+    public class Score : IScore
     {
-        Dictionary<Judge, Dictionary<ScoringEntry, float>> scores = new Dictionary<Judge, Dictionary<ScoringEntry, float>>();
+        private Dictionary<Judge, Dictionary<ScoringEntry, float>> internalScores = new Dictionary<Judge, Dictionary<ScoringEntry, float>>();
+        public List<KeyValuePair<Judge, Dictionary<ScoringEntry, float>>> Scores {
+            get
+            {
+                List<KeyValuePair<Judge, Dictionary<ScoringEntry, float>>> ret = new List<KeyValuePair<Judge, Dictionary<ScoringEntry, float>>>();
+                foreach (KeyValuePair<Judge, Dictionary<ScoringEntry, float>> kvp in internalScores)
+                    ret.Add(kvp);
+                return ret;
+            }
+        }
         private CompetitionGroupType competitionType;
 
         public Score(CompetitionGroupType competitionType)
@@ -24,7 +32,7 @@ namespace ShinsakaiWindowsApp
         {
             competitionType = sc.competitionType;
             
-            foreach(KeyValuePair<Judge, Dictionary<ScoringEntry, float>> judge in sc.scores)
+            foreach(KeyValuePair<Judge, Dictionary<ScoringEntry, float>> judge in sc.Scores)
             {
                 Dictionary<ScoringEntry, float> newJudgeScore = new Dictionary<ScoringEntry, float>();
                 foreach(KeyValuePair<ScoringEntry, float> kvp in judge.Value)
@@ -32,16 +40,11 @@ namespace ShinsakaiWindowsApp
                     newJudgeScore.Add(kvp.Key, kvp.Value);
                 }
                 // Clear old data
-                if (scores.ContainsKey(judge.Key))
-                    scores.Remove(judge.Key);
+                if (internalScores.ContainsKey(judge.Key))
+                    internalScores.Remove(judge.Key);
                 //Set new data
-                scores.Add(judge.Key, newJudgeScore);
+                internalScores.Add(judge.Key, newJudgeScore);
             }
-        }
-
-        public Dictionary<Judge, Dictionary<ScoringEntry, float>> getScores()
-        {
-            return scores;
         }
 
         public List<ScoringEntry> getRows()
@@ -52,34 +55,34 @@ namespace ShinsakaiWindowsApp
         protected void addJudge(Judge j)
         {
             // Clear old data
-            if (scores.ContainsKey(j))
-                scores.Remove(j);
+            if (internalScores.ContainsKey(j))
+                internalScores.Remove(j);
 
             Dictionary<ScoringEntry, float> score = new Dictionary<ScoringEntry, float>();
             foreach (ScoringEntry entry in competitionType.getScoringEntries())
             {
                 score.Add(entry, 0.0f);
             }
-            scores.Add(j, score);
+            internalScores.Add(j, score);
         }
 
         public void addScore(Judge judge, ScoringEntry entryKey, float value)
         {
-            if (!scores.ContainsKey(judge))
+            if (!internalScores.ContainsKey(judge))
             {
-                scores.Add(judge, new Dictionary<ScoringEntry, float>());
+                internalScores.Add(judge, new Dictionary<ScoringEntry, float>());
             }
-            (scores[judge])[entryKey] = value;
+            (internalScores[judge])[entryKey] = value;
         }
 
         public float getTotal()
         {
-            if(scores.Count == 0)
+            if(Scores.Count == 0)
             {
                 return 0.0f;
             }
             float sum = 0.0f;
-            foreach(KeyValuePair<Judge, Dictionary<ScoringEntry, float>> judging in scores)
+            foreach(KeyValuePair<Judge, Dictionary<ScoringEntry, float>> judging in Scores)
             {
                 foreach (KeyValuePair<ScoringEntry, float> kvp in judging.Value)
                 {

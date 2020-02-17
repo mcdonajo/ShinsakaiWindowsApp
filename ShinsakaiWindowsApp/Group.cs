@@ -2,54 +2,43 @@
 using System.Collections.Generic;
 using System.IO;
 
+
 namespace ShinsakaiWindowsApp
 {
     public class Group : IExportable
     {
-        private List<Registrant> registrants = new List<Registrant>();
-
         public GroupScore GroupScore { get; set; } = null;
         public int Order { get; set; }
         public Division Division { get; set; }
         public string ID { get; set; } = DataManager.GetGuid();
+        public List<Registrant> Registrants { get; set;  } = new List<Registrant>();
 
         public void addRegistrant(Registrant reg)
         {
-            if(!registrants.Contains(reg))
+            if(!Registrants.Contains(reg))
             {
-                registrants.Add(reg);
-                reg.addGroup(this);
+                Registrants.Add(reg);
             }
             
         }
 
         public void removeRegistrant(Registrant reg)
         {
-            if (reg != null && registrants.Contains(reg))
+            if (reg != null && Registrants.Contains(reg))
             {
-                registrants.Remove(reg);
-                reg.removeGroup(this);
+                Registrants.Remove(reg);
             }
 
-            if (registrants.Count <2)
+            if (Registrants.Count <2)
             {
-                foreach(Registrant r in registrants)
-                {
-                    r.removeGroup(this);
-                }
-                registrants.Clear();
+                Registrants.Clear();
                 DataManager.GroupManager.removeGroup(this, Division);
             }
         }
 
-        public List<Registrant> getRegistrants()
-        {
-            return registrants;
-        }
-
         public Registrant findRegistrantByGroupTag(string groupTag)
         {
-            foreach(Registrant r in getRegistrants())
+            foreach(Registrant r in Registrants)
             {
                 if (generateGroupPanelString(r).Equals(groupTag))
                 {
@@ -64,32 +53,10 @@ namespace ShinsakaiWindowsApp
             return reg.LastName + ", " + reg.FirstName + " (" + reg.Dojo + ")";
         }
 
-        public override bool Equals(object value)
-        {
-            Group g = value as Group;
-            if (g != null)
-            {
-                if (g.getRegistrants().Count != registrants.Count)
-                {
-                    return false;
-                }
-                foreach( Registrant r in g.getRegistrants())
-                {
-                    if (!registrants.Contains(r)) { return false; }
-                }
-            }
-            return true;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
         public void export(StreamWriter file)
         {
             string output = ID + "," + Order.ToString() + "," + Division.ToString();
-            foreach(Registrant reg in registrants)
+            foreach(Registrant reg in Registrants)
             {
                 output += "," + reg.ID;
             }
@@ -114,10 +81,7 @@ namespace ShinsakaiWindowsApp
 
         public void clear()
         {
-            foreach(Registrant r in registrants)
-            {
-                r.removeGroup(this);
-            }
+
         }
     }
 }

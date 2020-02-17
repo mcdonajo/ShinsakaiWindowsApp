@@ -44,7 +44,7 @@ namespace ShinsakaiWindowsApp
             scoringContents.Controls.Clear();
             foreach (Registrant r in gScore.getRegistrants())
             {
-                IScore score = gScore.getScoreForRegistrant(r);
+                Score score = gScore.getScoreForRegistrant(r);
                 ScoringControl sc = new ScoringControl(ref score, r, this);
                 sc.Dock = DockStyle.Top;
                 scoringContents.Controls.Add(sc);

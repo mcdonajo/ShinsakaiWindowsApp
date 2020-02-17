@@ -40,7 +40,7 @@ namespace ShinsakaiWindowsApp
 
         private void addRegistrants()
         {
-            foreach (Registrant reg in Group.getRegistrants())
+            foreach (Registrant reg in Group.Registrants)
             {
                 Label label = new Label();
                 label.AutoSize = true;
@@ -57,7 +57,7 @@ namespace ShinsakaiWindowsApp
                 draggedout.Add(label, false);
                 this.Controls.Add(label);
             }
-            this.Height = Group.getRegistrants().Count * 15;
+            this.Height = Group.Registrants.Count * 15;
         }
 
         private void Label_MouseEnter(object sender, EventArgs e)

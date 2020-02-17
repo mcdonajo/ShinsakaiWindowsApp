@@ -22,6 +22,19 @@ namespace ShinsakaiWindowsApp
             return groups.OrderBy(g => g.Order).ToList();
         }
 
+        public Group getGroup(string groupID)
+        {
+            foreach(KeyValuePair<Division, List<Group>> groupsPerDivision in divGroups)
+            {
+                foreach(Group g in groupsPerDivision.Value)
+                {
+                    if (groupID.Equals(g.ID))
+                        return g;
+                }
+            }
+            return null;
+        }
+
         public void addGroup(Group g, Division div)
         {
             if (!divGroups.ContainsKey(div))
@@ -108,7 +121,7 @@ namespace ShinsakaiWindowsApp
             {
                 Group newGroup = new Group();
                 newGroup.import(line);
-                if (newGroup.getRegistrants().Count >= 2)
+                if (newGroup.Registrants.Count >= 2)
                     addGroup(newGroup, newGroup.Division);
             }
             return line;
@@ -152,7 +165,7 @@ namespace ShinsakaiWindowsApp
                 }
                 
                 
-                foreach (Registrant r in g.getRegistrants())
+                foreach (Registrant r in g.Registrants)
                 {
                     contents.Add(r.FirstName + " " + r.LastName + "  ( " + r.Dojo + " Dojo)");
                 }

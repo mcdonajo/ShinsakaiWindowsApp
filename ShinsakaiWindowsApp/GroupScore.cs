@@ -6,8 +6,18 @@ namespace ShinsakaiWindowsApp
     public class GroupScore
     {
         public CompetitionGroupType CompetitionGroupType { get; set; }
+        private Dictionary<Registrant, Score> internalScoring = new Dictionary<Registrant, Score>();
+        public List<KeyValuePair<Registrant, Score>> Scoring {
+            get
+            {
+                List<KeyValuePair<Registrant, Score>> ret = new List<KeyValuePair<Registrant, Score>>();
+                foreach (KeyValuePair<Registrant, Score> kvp in internalScoring)
+                    ret.Add(kvp);
+                return ret;
+            }
+        }
+
         Group group;
-        Dictionary<Registrant, Score> scoring = new Dictionary<Registrant, Score>();
 
         public GroupScore(CompetitionGroupType competition, Group g)
         {
@@ -15,7 +25,7 @@ namespace ShinsakaiWindowsApp
             group = g;
             foreach(Registrant r in getRegistrants())
             {
-                scoring.Add(r, new Score(CompetitionGroupType));
+                internalScoring.Add(r, new Score(CompetitionGroupType));
             }
         }
 
@@ -23,9 +33,9 @@ namespace ShinsakaiWindowsApp
         {
             CompetitionGroupType = gs.CompetitionGroupType;
             group = gs.group;
-            foreach(KeyValuePair<Registrant, Score> kvp in gs.scoring)
+            foreach(KeyValuePair<Registrant, Score> kvp in gs.Scoring)
             {
-                scoring.Add(kvp.Key, new Score(kvp.Value));
+                internalScoring.Add(kvp.Key, new Score(kvp.Value));
             }
         }
 
@@ -34,11 +44,11 @@ namespace ShinsakaiWindowsApp
             List<Registrant> regs = new List<Registrant>();
             if (CompetitionGroupType == CompetitionGroupType.Rolling)
             {
-                regs.Add(Registrant.DefaultRegistrant);
+                regs.Add(DataManager.DefaultRegistrant);
             }
             else
             {
-                foreach(Registrant r in group.getRegistrants())
+                foreach(Registrant r in group.Registrants)
                 {
                     regs.Add(r);
                 }
@@ -51,11 +61,11 @@ namespace ShinsakaiWindowsApp
             return CompetitionGroupType.getScoringEntries();
         }
 
-        public IScore getScoreForRegistrant(Registrant r)
+        public Score getScoreForRegistrant(Registrant r)
         {
-            if(scoring.ContainsKey(r))
+            if(internalScoring.ContainsKey(r))
             {
-                return scoring[r];
+                return internalScoring[r];
             }
             return null;
         }
