@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace ShinsakaiWindowsApp
 {
     public class GroupManager : IExportable, IImportable
     {
         private static int numGroups = 0;
+        private static string sepLine = "________________________________________________________________________________";
         private Dictionary<Division, List<Group>> divGroups = new Dictionary<Division, List<Group>>();
         public GroupsPanel GroupsPanel { get; set; } = new GroupsPanel();
+        public IGroupSorter GroupSorter { get; set; } = new OrderGroupSorter();
 
         public List<Group> getSortedGroupList(Division division)
         {
@@ -19,7 +20,29 @@ namespace ShinsakaiWindowsApp
             {
                 return new List<Group>();
             }
-            return groups.OrderBy(g => g.Order).ToList();
+            return GroupSorter.sort(groups);
+        }
+
+        public List<Group> getScoreSortedGroups(Division division, Group g)
+        {
+            List<Group> groups = new List<Group>();
+            divGroups.TryGetValue(division, out groups);
+
+            if (groups == null)
+            {
+                return new List<Group>();
+            }
+            groups = new ScoreGroupSorter().sort(groups, g);
+            groups.Reverse();
+            return groups;
+        }
+
+        public Group getMostRecentGroup(Division div)
+        {
+            List<Group> groups = new LastScoredSorter().sort(getGroupForDivision(div));
+            if (groups.Count > 0 && groups[0].LastScored != null)
+                return groups[0];
+            return null;
         }
 
         public Group getGroup(string groupID)
@@ -72,7 +95,10 @@ namespace ShinsakaiWindowsApp
 
         public void reorder(Group group)
         {
+            IGroupSorter sorter = GroupSorter;
+            GroupSorter = new OrderGroupSorter();
             List<Group> sortedList = getSortedGroupList(group.Division);
+            sortedList.Reverse();
             int orderNo = 0;
             foreach (Group g in sortedList)
             {
@@ -92,6 +118,7 @@ namespace ShinsakaiWindowsApp
                 }
                 orderNo++;
             }
+            GroupSorter = sorter;
         }
 
         public void export(StreamWriter file)
@@ -142,6 +169,27 @@ namespace ShinsakaiWindowsApp
             divGroups.Clear();
         }
 
+        public List<string> getRecentScoredGroups(Division div)
+        {
+            List<string> contents = new List<string>();
+            Group recentGroup = getMostRecentGroup(div);
+            if (recentGroup != null)
+            {
+                contents.Add("Most recent score in " + div.ToString());
+                contents.AddRange(printGroupContents(recentGroup));
+                contents.Add("");
+                contents.Add("");
+                contents.Add("");
+            }
+            
+            contents.Add("Top scores in " + div.ToString());
+            foreach (Group g in getScoreSortedGroups(div, null))
+            {
+                contents.AddRange(printGroupContents(g));
+            }
+            return contents;
+        }
+
         public List<string> getPrintContentsForDivision(Division div)
         {
             List<string> contents = new List<string>();
@@ -150,27 +198,33 @@ namespace ShinsakaiWindowsApp
             {
                 return contents;
             }
-            foreach (Group g in getSortedGroupList(div))
+            List<Group> groups = getSortedGroupList(div);
+            if (GroupSorter is ScoreGroupSorter)
             {
-                if (g.GroupScore != null && g.GroupScore.getRegistrants() != null)
-                {
-                    float sum = 0.0f;
-                    foreach (Registrant r in g.GroupScore.getRegistrants())
-                        sum += g.GroupScore.getScoreForRegistrant(r).getTotal();
-                    contents.Add(sum.ToString("F2").PadLeft(80, '_'));
-                }
-                else
-                {
-                    contents.Add("________________________________________________________________________________");
-                }
-                
-                
-                foreach (Registrant r in g.Registrants)
-                {
-                    contents.Add(r.FirstName + " " + r.LastName + "  ( " + r.Dojo + " Dojo)");
-                }
-                contents.Add("");
-                contents.Add("");
+                groups.Reverse();
+            }
+            foreach (Group g in groups)
+            {
+                contents.AddRange(printGroupContents(g));
+            }
+            return contents;
+        }
+
+        List<string> printGroupContents(Group g)
+        {
+            List<string> contents = new List<string>();
+            if (g.GroupScore != null && g.GroupScore.getRegistrants() != null)
+            {
+                contents.Add(g.GroupScore.getScoreString().PadLeft(80, '_'));
+            }
+            else
+            {
+                contents.Add(sepLine);
+            }
+
+            foreach (Registrant r in g.Registrants)
+            {
+                contents.Add(r.FirstName + " " + r.LastName + "  ( " + r.Dojo + " Dojo )");
             }
             return contents;
         }

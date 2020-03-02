@@ -38,6 +38,12 @@
             this.saveButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.divisionList = new System.Windows.Forms.ListBox();
+            this.senseiField = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.beltCombo = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.shirtCombo = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -66,7 +72,8 @@
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(12, 108);
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label4.Location = new System.Drawing.Point(12, 186);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(100, 23);
             this.label4.TabIndex = 3;
@@ -103,7 +110,7 @@
             // 
             this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.saveButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.saveButton.Location = new System.Drawing.Point(339, 182);
+            this.saveButton.Location = new System.Drawing.Point(339, 306);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(75, 23);
             this.saveButton.TabIndex = 8;
@@ -115,7 +122,7 @@
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(258, 182);
+            this.cancelButton.Location = new System.Drawing.Point(258, 306);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 9;
@@ -125,16 +132,65 @@
             // 
             // divisionList
             // 
-            this.divisionList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.divisionList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.divisionList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.divisionList.FormattingEnabled = true;
             this.divisionList.ItemHeight = 16;
-            this.divisionList.Location = new System.Drawing.Point(97, 80);
+            this.divisionList.Location = new System.Drawing.Point(97, 186);
             this.divisionList.Name = "divisionList";
             this.divisionList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.divisionList.Size = new System.Drawing.Size(317, 82);
+            this.divisionList.Size = new System.Drawing.Size(317, 114);
             this.divisionList.TabIndex = 10;
+            // 
+            // senseiField
+            // 
+            this.senseiField.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.senseiField.Location = new System.Drawing.Point(97, 75);
+            this.senseiField.Name = "senseiField";
+            this.senseiField.Size = new System.Drawing.Size(317, 22);
+            this.senseiField.TabIndex = 11;
+            // 
+            // label5
+            // 
+            this.label5.Location = new System.Drawing.Point(12, 78);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(100, 23);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Sensei";
+            // 
+            // beltCombo
+            // 
+            this.beltCombo.FormattingEnabled = true;
+            this.beltCombo.Location = new System.Drawing.Point(97, 98);
+            this.beltCombo.Name = "beltCombo";
+            this.beltCombo.Size = new System.Drawing.Size(317, 24);
+            this.beltCombo.TabIndex = 13;
+            // 
+            // label6
+            // 
+            this.label6.Location = new System.Drawing.Point(12, 101);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(100, 23);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "Belt";
+            // 
+            // shirtCombo
+            // 
+            this.shirtCombo.FormattingEnabled = true;
+            this.shirtCombo.Location = new System.Drawing.Point(97, 123);
+            this.shirtCombo.Name = "shirtCombo";
+            this.shirtCombo.Size = new System.Drawing.Size(317, 24);
+            this.shirtCombo.TabIndex = 15;
+            // 
+            // label7
+            // 
+            this.label7.Location = new System.Drawing.Point(12, 126);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(100, 23);
+            this.label7.TabIndex = 16;
+            this.label7.Text = "Shirt Size";
             // 
             // RegistrantEditor
             // 
@@ -142,7 +198,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(430, 218);
+            this.ClientSize = new System.Drawing.Size(430, 342);
+            this.Controls.Add(this.shirtCombo);
+            this.Controls.Add(this.beltCombo);
+            this.Controls.Add(this.senseiField);
             this.Controls.Add(this.divisionList);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.saveButton);
@@ -153,6 +212,9 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label7);
             this.Name = "RegistrantEditor";
             this.Text = "Registrant Editor";
             this.ResumeLayout(false);
@@ -172,5 +234,11 @@
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.ListBox divisionList;
+        private System.Windows.Forms.TextBox senseiField;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox beltCombo;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox shirtCombo;
+        private System.Windows.Forms.Label label7;
     }
 }

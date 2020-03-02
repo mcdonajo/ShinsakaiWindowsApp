@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ShinsakaiWindowsApp
 {
@@ -70,13 +71,26 @@ namespace ShinsakaiWindowsApp
 
         public string import(StreamReader file)
         {
-            string line = ""; ;
+            List<string> failedLines = new List<string>();
+            string line = "";
             while ((line = file.ReadLine()) != null && line != "")
             {
                 Registrant newReg = new Registrant();
-                newReg.import(line);
-                if (newReg.hasData())
-                    addRegistrant(newReg);
+                if (newReg.import(line))
+                {
+                    if (newReg.hasData())
+                        addRegistrant(newReg);
+                }
+                else
+                {
+                    failedLines.Add(line);
+                }
+            }
+            if (failedLines.Count > 0)
+            {
+                string msg = "";
+                failedLines.ForEach(l => msg += l + "\n");
+                MessageBox.Show("Registrant import failure", msg, MessageBoxButtons.OK);
             }
             return line;
         }
@@ -125,11 +139,13 @@ namespace ShinsakaiWindowsApp
                 contents.Add("None");
                 return contents;
             }
-            foreach (Registrant r in registrants[div])
+            List<Registrant> regList = getSortedRegistrantList(div);
+            regList.Reverse();
+            foreach (Registrant r in regList)
             {
                 if (!seenRegistrants.Contains(r))
                 {
-                    contents.Add(r.FirstName + " " + r.LastName + " ( " + r.Dojo + " )");
+                    contents.Add("[   ] " + r.LastName + ", " + r.FirstName + " ( " + r.Dojo + " ) - Shirt Size : " + r.ShirtSize.getDesc() );
                     seenRegistrants.Add(r);
                     contents.Add("");
                 }

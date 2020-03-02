@@ -37,11 +37,7 @@ namespace ShinsakaiWindowsApp
                     HttpListenerRequest request = context.Request;
                     // Obtain a response object.
                     string path = request.Url.LocalPath;
-                    string responseString = respondWithError();
-                    if (path.EndsWith("groups"))
-                        responseString = respondWithDisplayGroups();
-                    if (path.EndsWith("group"))
-                        responseString = respondWithGroupInfo(request.Url.Query.Trim('?'));
+                    string responseString = getResponseStr(request, path);
                     byte[] buffer = Encoding.UTF8.GetBytes(responseString.Replace("\n", "<br>"));
                     // Get a response stream and write the response to it.
                     HttpListenerResponse response = context.Response;
@@ -62,9 +58,31 @@ namespace ShinsakaiWindowsApp
             }
         }
 
+        private string getResponseStr(HttpListenerRequest request, string path)
+        {
+            string responseStr = respondWithError();
+            if (path.EndsWith("groups"))
+                responseStr = respondWithDisplayGroups();
+            if (path.EndsWith("scores"))
+                responseStr = respondWithScoredGroups();
+            if (path.EndsWith("group"))
+                responseStr = respondWithGroupInfo(request.Url.Query.Trim('?'));
+            return responseStr;
+        }
+
         public string respondWithDisplayGroups()
         {
             List<string> contents = DataManager.GroupManager.getPrintContentsForDivision(DataManager.CurrentDivision);
+            string responseString = responseStart;
+            foreach (string s in contents)
+                responseString += (s + "\n");
+            responseString += responseEnd;
+            return responseString;
+        }
+
+        public string respondWithScoredGroups()
+        {
+            List<string> contents = DataManager.GroupManager.getRecentScoredGroups(DataManager.CurrentDivision);
             string responseString = responseStart;
             foreach (string s in contents)
                 responseString += (s + "\n");

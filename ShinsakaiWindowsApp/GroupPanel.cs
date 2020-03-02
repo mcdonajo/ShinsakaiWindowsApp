@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ShinsakaiWindowsApp
@@ -10,6 +7,7 @@ namespace ShinsakaiWindowsApp
     class GroupPanel : Panel
     {
         private Dictionary<Control, bool> draggedout = new Dictionary<Control, bool>();
+        private Label scoreLabel = null;
         public Group Group { get; set; }
         private void InitializeComponent()
         {
@@ -36,6 +34,7 @@ namespace ShinsakaiWindowsApp
             Group = group;
             InitializeComponent();
             addRegistrants();
+            addScoreIfAvailable();
         }
 
         private void addRegistrants()
@@ -60,6 +59,26 @@ namespace ShinsakaiWindowsApp
             this.Height = Group.Registrants.Count * 15;
         }
 
+        private void addScoreIfAvailable()
+        {
+            if (Group.GroupScore != null)
+            {
+                if (scoreLabel == null)
+                {
+                    scoreLabel = new Label();
+                    scoreLabel.Dock = DockStyle.Right;
+                    scoreLabel.Visible = true;
+                    this.Controls.Add(scoreLabel);
+                    scoreLabel.MouseDown += new MouseEventHandler(this.GroupPanel_MouseDown);
+                    scoreLabel.MouseEnter += new EventHandler(this.GroupPanel_MouseEnter);
+                    scoreLabel.MouseLeave += new EventHandler(this.GroupPanel_MouseLeave);
+                }
+                scoreLabel.Text = Group.GroupScore.getScoreString();
+            }
+            
+
+        }
+
         private void Label_MouseEnter(object sender, EventArgs e)
         {
             GroupPanel_MouseEnter(this, e);
@@ -77,7 +96,7 @@ namespace ShinsakaiWindowsApp
             if (e.Button == MouseButtons.Right)
             {
                 Registrant r = Group.findRegistrantByGroupTag(((Label)sender).Text);
-                if (r != null)
+                if (r != null && askDelete(r))
                 {
                     Group.removeRegistrant(r);
                     DataManager.GroupManager.updateUI(Group.Division);
@@ -87,6 +106,12 @@ namespace ShinsakaiWindowsApp
             {
                 GroupPanel_MouseDown(this, e);
             }
+        }
+
+        private bool askDelete(Registrant r)
+        {
+            DialogResult result =MessageBox.Show("Really remove " + r.FirstName + " from group?", "Remove Registrant", MessageBoxButtons.YesNoCancel);
+            return result.Equals(DialogResult.Yes);
         }
 
         private void GroupPanel_MouseEnter(object sender, EventArgs e)
@@ -140,6 +165,7 @@ namespace ShinsakaiWindowsApp
                 if (sForm.ShowDialog() == DialogResult.OK)
                 {
                     Group.GroupScore = sForm.GroupScore;
+                    addScoreIfAvailable();
                 }
             }
         }

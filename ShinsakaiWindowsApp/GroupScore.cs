@@ -69,5 +69,18 @@ namespace ShinsakaiWindowsApp
             }
             return null;
         }
+
+        public float getScore()
+        {
+            float sum = 0.0f;
+            foreach (Registrant r in getRegistrants())
+                sum += getScoreForRegistrant(r).getTotal();
+            return sum;
+        }
+
+        public string getScoreString()
+        {
+            return getScore().ToString("F2");
+        }
     }
 }

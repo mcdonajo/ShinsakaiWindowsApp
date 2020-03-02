@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Belt.cs" />
     <Compile Include="CompetitionGroupType.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="Division.cs" />
@@ -56,6 +57,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="GroupScore.cs" />
+    <Compile Include="GroupSorter.cs" />
     <Compile Include="GroupsPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -102,6 +104,7 @@
     <Compile Include="ScoringForm.Designer.cs">
       <DependentUpon>ScoringForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ShirtSize.cs" />
     <Compile Include="WebServer.cs" />
     <EmbeddedResource Include="GroupPanel.resx">
       <DependentUpon>GroupPanel.cs</DependentUpon>

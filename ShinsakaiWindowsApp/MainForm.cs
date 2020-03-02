@@ -14,18 +14,17 @@ namespace ShinsakaiWindowsApp
     public partial class MainForm : Form
     {
         int idx = 0;
-        RegistrantsPanel registrants;
         RegistrantsPanel groupRegistrants;
         WebServer webServer;
 
         public MainForm()
         {
             InitializeComponent();
-            setUpRegistrantsPanel();
             setUpRegistrantsPanelForGroup();
             setUpGroupsPanel();
             Helper.populateDropDownOptions(divCombo);
             divCombo.SelectedItem = DataManager.CurrentDivision.ToString();
+            tabControl1_SelectedIndexChanged(null, null);
             webServer = new WebServer();
             Thread webServerThread = new Thread(new ThreadStart(webServer.Listen));
             webServerThread.Start();
@@ -33,18 +32,14 @@ namespace ShinsakaiWindowsApp
 
         private void addRegistrantToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            addTestReg();
-            /*
             Registrant reg = new Registrant();
-            RegistrantData regData = reg.RegistrantData;
-            RegistrantEditor regEditor = new RegistrantEditor(ref regData);
+            RegistrantEditor regEditor = new RegistrantEditor(ref reg);
             regEditor.ShowDialog();
             if (regEditor.DialogResult == DialogResult.OK && reg.hasData())
             {
                 DataManager.RegistrantManager.addRegistrant(reg);
-                registrants.refreshRegistrants(Division.Division1);
+                groupRegistrants.refreshRegistrants(DataManager.CurrentDivision);
             }
-            */
         }
 
         private void addTestReg()
@@ -56,17 +51,7 @@ namespace ShinsakaiWindowsApp
             reg.Dojo = "West linn" + idx;
             idx++;
             DataManager.RegistrantManager.addRegistrant(reg);
-            registrants.refreshRegistrants(DataManager.CurrentDivision);
             groupRegistrants.refreshRegistrants(DataManager.CurrentDivision);
-        }
-
-        private void setUpRegistrantsPanel()
-        {
-            registrants = new RegistrantsPanel();
-            registrantsTab.Controls.Add(registrants);
-            registrants.Dock = DockStyle.Fill;
-            registrants.Size = registrantsTab.Size;
-            registrants.PerformLayout();
         }
 
         private void setUpRegistrantsPanelForGroup()
@@ -102,7 +87,6 @@ namespace ShinsakaiWindowsApp
         private void divCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
             DataManager.CurrentDivision = (Division)(Enum.Parse(typeof(Division), divCombo.SelectedItem.ToString()));
-            registrants.refreshRegistrants(DataManager.CurrentDivision);
             groupRegistrants.refreshRegistrants(DataManager.CurrentDivision);
             DataManager.GroupManager.updateUI(DataManager.CurrentDivision);
         }
@@ -116,7 +100,6 @@ namespace ShinsakaiWindowsApp
         private void importButton_Click(object sender, EventArgs e)
         {
             DataManager.import(getRegistrantInfoFile());
-            registrants.refreshRegistrants(DataManager.CurrentDivision);
             groupRegistrants.refreshRegistrants(DataManager.CurrentDivision);
             DataManager.GroupManager.updateUI(DataManager.CurrentDivision);
         }
@@ -157,6 +140,28 @@ namespace ShinsakaiWindowsApp
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             webServer.end();
+        }
+
+        private void sortByOrderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            uncheckSortOptions();
+            sortByOrderToolStripMenuItem.Checked = true;
+            DataManager.GroupManager.GroupSorter = new OrderGroupSorter();
+            DataManager.GroupManager.GroupsPanel.refreshGroups(DataManager.CurrentDivision);
+        }
+
+        private void sortByScoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            uncheckSortOptions();
+            sortByScoreToolStripMenuItem.Checked = true;
+            DataManager.GroupManager.GroupSorter = new ScoreGroupSorter();
+            DataManager.GroupManager.GroupsPanel.refreshGroups(DataManager.CurrentDivision);
+        }
+
+        private void uncheckSortOptions()
+        {
+            sortByScoreToolStripMenuItem.Checked = false;
+            sortByOrderToolStripMenuItem.Checked = false;
         }
     }
 }

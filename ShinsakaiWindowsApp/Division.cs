@@ -8,6 +8,7 @@ namespace ShinsakaiWindowsApp
 {
     public enum Division
     {
+        DivisionA,
         Division1,
         Division2,
         Division3,

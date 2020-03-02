@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace ShinsakaiWindowsApp
@@ -11,12 +8,15 @@ namespace ShinsakaiWindowsApp
     {
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GroupsPanel));
             this.SuspendLayout();
             // 
             // GroupsPanel
             // 
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.Window;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ResumeLayout(false);
 
@@ -32,7 +32,6 @@ namespace ShinsakaiWindowsApp
             SuspendLayout();
             Controls.Clear();
             List<Group> groups = DataManager.GroupManager.getSortedGroupList(DataManager.CurrentDivision);
-            groups.Reverse();
             foreach (Group g in groups)
             {
                 GroupPanel groupPanel = new GroupPanel(g);

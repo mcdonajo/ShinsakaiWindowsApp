@@ -73,6 +73,7 @@ namespace ShinsakaiWindowsApp
         private void okButton_Click(object sender, EventArgs e)
         {
             group.GroupScore = GroupScore;
+            group.LastScored = DateTime.Now;
             Close();
         }
 

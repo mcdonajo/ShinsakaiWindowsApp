@@ -12,6 +12,7 @@ namespace ShinsakaiWindowsApp
         public Division Division { get; set; }
         public string ID { get; set; } = DataManager.GetGuid();
         public List<Registrant> Registrants { get; set;  } = new List<Registrant>();
+        public DateTime? LastScored { get; set; } = null;
 
         public void addRegistrant(Registrant reg)
         {
